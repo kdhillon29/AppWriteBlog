@@ -5,7 +5,7 @@ export class AuthService {
     account;
 
     constructor() {
-        this.client()
+        this.client
             .setEndpoint(conf.appwriteUrl) // Your API Endpoint
             .setProject(conf.appwriteProjectId);
         this.account = new Account(this.client)
@@ -39,10 +39,12 @@ export class AuthService {
     }
     async getCurrentUser() {
         try {
-            return await this.account.get()
+            const response = await this.account.get()
+            console.log('user login status', response)
+            return response
         } catch (error) {
-            console.error('error in authservice/getuser', error);
-            //throw new Error(error)
+            console.error('error in authservice/getuser', error.message);
+            // throw new Error(error)
         }
         return null;
     }
