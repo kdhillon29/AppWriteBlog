@@ -11,8 +11,9 @@ import Select from "./Select"
 import Login from "./Login"
 import PostCard from "./PostCard"
 import AuthLayout from "./AuthLayout"
+import PostForm from "./post-form/PostForm"
 
 export {
     Header, Footer, Container, Logo, LogoutBtn, Input, RTE, Signup, Select,
-    Button, Login, PostCard, AuthLayout
+    Button, Login, PostCard, AuthLayout, PostForm
 }

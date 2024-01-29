@@ -4,7 +4,7 @@ import "./App.css";
 import authService from "./appwrite/auth";
 import { login, logout } from "./store/authSlice";
 import { Header, Footer } from "./components";
-// import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,9 @@ function App() {
       <div className="w-full block ">
         <Header />
       </div>
-      <main>{/* TODO: <Outlet /> */}</main>
+      <main className="flex items-center justify-center w-full">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   ) : null;
