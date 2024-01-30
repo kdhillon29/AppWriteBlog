@@ -3,9 +3,10 @@ import appwriteService from "../appwrite/db";
 
 
 
-export default function useFetch() {
+export default function useFetch(slug = '') {
 
     const [posts, setPosts] = useState(null)
+    const [post, setPost] = useState(null)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
 
@@ -15,6 +16,8 @@ export default function useFetch() {
             try {
                 const { documents } = await appwriteService.getPosts()
                 setPosts(documents)
+                const document = slug ? await appwriteService.getPost(slug) : null
+                setPost(document)
                 // setLoading(false)
 
 
@@ -28,8 +31,8 @@ export default function useFetch() {
         }
 
         fn()
-    }, [])
+    }, [slug])
 
-    return { posts, error, loading }
+    return { posts, post, error, loading }
 
 }

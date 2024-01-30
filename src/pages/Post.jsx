@@ -1,27 +1,32 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import appwriteService from "../appwrite/db";
 import { Button, Container } from "../components";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
+import useFetch from "../hooks/useFetch";
 
 export default function Post() {
-  const [post, setPost] = useState(null);
   const { slug } = useParams();
+  const { post, loading, error } = useFetch(slug);
+  console.log("post is ", post);
+  // const [post, setPost] = useState(null);
   const navigate = useNavigate();
 
-  const userData = useSelector((state) => state.auth.userData);
+  const { name, $id } = useSelector((state) => state.auth.userData);
 
-  const isAuthor = post && userData ? post.userId === userData.$id : false;
+  const isAuthor = post && $id ? post.userId === $id : false;
+  console.log("author is ", isAuthor);
+  console.log("user is ", name, $id);
+  console.log("post id is ", post?.userId);
 
-  useEffect(() => {
-    if (slug) {
-      appwriteService.getPost(slug).then((post) => {
-        if (post) setPost(post);
-        else navigate("/");
-      });
-    } else navigate("/");
-  }, [slug, navigate]);
+  // useEffect(() => {
+  //   if (slug) {
+  //     appwriteService.getPost(slug).then((post) => {
+  //       if (post) setPost(post);
+  //       else navigate("/");
+  //     });
+  //   } else navigate("/");
+  // }, [slug, navigate]);
 
   const deletePost = () => {
     appwriteService.deletePost(post.$id).then((status) => {
@@ -61,5 +66,9 @@ export default function Post() {
         <div className="browser-css">{parse(post.content)}</div>
       </Container>
     </div>
-  ) : null;
+  ) : loading && !error ? (
+    <div className="bg-green-300 text-3xl px-16 py-4">Loading...</div>
+  ) : (
+    !loading && error && <div>error</div>
+  );
 }
