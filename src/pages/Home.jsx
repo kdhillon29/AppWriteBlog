@@ -1,19 +1,14 @@
-import { useEffect, useState } from "react";
-import appwriteService from "../appwrite/db";
+// import { useEffect, useState } from "react";
+// import appwriteService from "../appwrite/db";
 import { Container, PostCard } from "../components";
+import useFetch from "../hooks/useFetch";
 
 function Home() {
-  const [posts, setPosts] = useState([]);
+  const { posts, loading, error } = useFetch();
+  console.log("loading stae is", loading);
+  if (error) console.log("error in home page", error);
 
-  useEffect(() => {
-    appwriteService.getPosts().then((posts) => {
-      if (posts) {
-        setPosts(posts.documents);
-      }
-    });
-  }, []);
-
-  if (posts.length === 0) {
+  if (posts && posts.length === 0) {
     return (
       <div className="w-full py-8 mt-4 text-center">
         <Container>
@@ -29,17 +24,24 @@ function Home() {
     );
   }
   return (
-    <div className="w-full py-8">
-      <Container>
-        <div className="flex flex-wrap">
-          {posts.map((post) => (
-            <div key={post.$id} className="p-2 w-1/4">
-              <PostCard {...post} />
+    <>
+      {loading && (
+        <div className="bg-green-300 text-3xl px-16 py-4">Loading...</div>
+      )}
+      {posts && (
+        <div className="w-full py-8">
+          <Container>
+            <div className="flex flex-wrap">
+              {posts.map((post) => (
+                <div key={post.$id} className="p-2 w-1/4">
+                  <PostCard {...post} />
+                </div>
+              ))}
             </div>
-          ))}
+          </Container>
         </div>
-      </Container>
-    </div>
+      )}
+    </>
   );
 }
 
